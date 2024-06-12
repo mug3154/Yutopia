@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 700c304ec6f950e4bbab8bb059c99295
+  m_SerializeEntries:
+  - m_GUID: 54d0a379ded187f4a932e2b3c603c42a
+    m_Address: SpritePrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ebfb9fa23a034c4583bbaa67f44b67c
+    m_Address: CharacterA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb7e072f2ef595349ba1dce2ad867ca2
+    m_Address: CharacterB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 67d8c5da4c87d2e4f81a60cea3ba549a
+    m_Address: LogScriptCell
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e69e35194910ae4882a5b80c9e713f2
+    m_Address: TilemapPalette
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3579f993a86144c4486b4f3731ae2a62
+    m_Address: Assets/Arts/Tilemap/tile_1_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2886b9eacf4b7034aafe503557ca9e85
+    m_Address: Assets/Arts/Tilemap/tile_9_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd14209a70d4bf247ada3b05ed60b6ea
+    m_Address: Assets/Arts/Tilemap/tile_8_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bda8020289ae79e42b892ffc472be8fb
+    m_Address: Assets/Arts/Tilemap/tile_7_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80894e0fe3c8652488a477c12c3c74e8
+    m_Address: Assets/Arts/Tilemap/tile_6_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b973b3da82675fd40a737646b7d1a391
+    m_Address: Assets/Arts/Tilemap/tile_5_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce41b01e6defb494da6f9689c1affc3d
+    m_Address: Assets/Arts/Tilemap/tile_4_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a67478018ada1fb40bd59af13d607b65
+    m_Address: Assets/Arts/Tilemap/tile_3_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ecae1f42342b0734d9adef2bca620c1b
+    m_Address: Assets/Arts/Tilemap/tile_2_0.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea20a1d9c5e40044893a51888a8dbb47
+    m_Address: SummonUnitCellInfo_ETC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fde8f0a217c889b41bdbd6aa63fdaa90
+    m_Address: MyUnit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 27a3213296bdbe346ab0fb452a99ab16, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: a31c5936d4168324886a8bea1ab1c215, type: 2}
+    - {fileID: 11400000, guid: d3701343f17d22d4e98a71bc3e072247, type: 2}
