@@ -2870,7 +2870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Top: {fileID: 1119626350}
-  _Bottom: {fileID: 0}
+  _Bottom: {fileID: 857033782}
 --- !u!1 &833744603
 GameObject:
   m_ObjectHideFlags: 0
