@@ -5,18 +5,25 @@ using UnityEngine.Tilemaps;
 
 public class SummonUnitCell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField] SummonUnitCellInfo _Info;
+    public SummonUnitCellInfo Info;
 
-    public void SetData(UnitData unitData)
+    public void SetData(UnitData unitData, SummonUnitCellInfo info)
     {
-        _Info.SetData(unitData);
+        Info = info;
+        Info.transform.SetParent(transform);
+        Info.transform.localScale = Vector3.one;
+        Info.transform.localPosition = Vector3.zero;
+        Info.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+        Info.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        Info.gameObject.SetActive(true);   
+        Info.SetData(unitData);
     }
 
     public void Use()
     {
-        _Info.Use();
+        Info.Use();
 
-        if(_Info.Usable())
+        if(Info.Usable())
         {
             GetComponent<CanvasGroup>().alpha = 1.0f;
         }
@@ -30,14 +37,15 @@ public class SummonUnitCell : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(_Info.Usable())
+        if(Info.Usable())
         {
-            BattleManager.Instance.CreateDragUnit(ref _Info.Data);
+            BattleManager.Instance.CreateDragUnit(ref Info.Data);
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        BattleManager.Instance.CreateUnit(ref _Info.Data);
+        //처음 여기서 PointerDown이 일어났기 때문에 다른 position에서 drag up해도 여기서 감지한다.
+        BattleManager.Instance.DragUnitUI.ReadyUnitDirection();
     }
 }

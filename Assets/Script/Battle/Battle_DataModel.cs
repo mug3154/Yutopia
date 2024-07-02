@@ -26,7 +26,7 @@ public static class BattleConfig
         };
     }
 
-    public static List<Vector3Int> GetEnemyRouteTilePos(ref MonsterData data, ref CurrentTileData[,] tileDatas)
+    public static List<Vector3Int> GetEnemyRouteTilePos(ref MonsterData data, Vector3Int startPos, ref CurrentTileData[,] tileDatas, MOVE_TYPE moveType)
     {
         //반환할 값
         List<Vector3Int> totalPathList = new List<Vector3Int>();
@@ -34,19 +34,16 @@ public static class BattleConfig
         //적의 리스폰 지점과 중간 경로, 목표 지점의 x,y 구하기
         Vector3Int[] enemyRoutePoses = new Vector3Int[data.Routes.Length + 2];
 
-        Vector3Int tilePos = BattleManager.Instance.GetRespawnPosition(data.RespawnIdx);
-        if (tilePos == BattleConfig.TrashValueVector3Int)
-        {
-            return totalPathList;
-        }
-        enemyRoutePoses[0] = tilePos;
+        Vector3Int tilePos;
+
+        enemyRoutePoses[0] = startPos;
 
         int size = data.Routes.Length;
         for (int i = 1; i <= size; ++i)
         {
             tilePos = data.Routes[i - 1];
 
-            if (BattleConfig.IsPassableTile(tileDatas[tilePos.x, tilePos.y]) == false)
+            if (BattleConfig.IsPassableTile(tileDatas[tilePos.x, tilePos.y], moveType) == false)
                 continue;
 
             enemyRoutePoses[i] = data.Routes[i - 1];
@@ -70,7 +67,7 @@ public static class BattleConfig
         {
             tempPathList.Clear();
 
-            BattleConfig.FindRouteTilePos(ref tempPathList, ref BattleManager.Instance.CurrentTileDatas, enemyRoutePoses[i], enemyRoutePoses[i + 1]);
+            BattleConfig.FindRouteTilePos(ref tempPathList, ref BattleManager.Instance.CurrentTileDatas, enemyRoutePoses[i], enemyRoutePoses[i + 1], moveType);
 
             if (tempPathList.Count > 0)
             {
@@ -81,23 +78,27 @@ public static class BattleConfig
         return totalPathList;
     }
 
-    public static bool IsPassableTile(CurrentTileData tile)
+    public static bool IsPassableTile(CurrentTileData tile, MOVE_TYPE moveType)
     {
         BATTLE_TILE tileType = tile.Type;
 
         if (tileType == BATTLE_TILE.DECORATION || tileType == BATTLE_TILE.SINKHOLE)
             return false;
 
-        UNIT_TYPE unitType = tile.UnitType;
+        if (tile.MyUnit == null)
+            return true;
 
-        if(unitType == UNIT_TYPE.OBSTACLES || unitType == UNIT_TYPE.DISPOSABLE_OBSTACLES)
-            return false;
+        UNIT_TYPE unitType = tile.MyUnit.Data.Type;
+
+        if(unitType == UNIT_TYPE.OBSTACLES)
+            if(moveType == MOVE_TYPE.LAND)
+                return false;
 
         return true;
     }
 
 
-    public static void FindRouteTilePos(ref List<Vector3Int> results, ref CurrentTileData[,] tileDatas, Vector3Int startPos, Vector3Int targetPos)
+    public static void FindRouteTilePos(ref List<Vector3Int> results, ref CurrentTileData[,] tileDatas, Vector3Int startPos, Vector3Int targetPos, MOVE_TYPE moveType)
     {
         int[] deltaX = new int[] { 0, -1, 0, 1/*, 1, -1, -1, 1 */};
         int[] deltaY = new int[] { -1, 0, 1, 0/*, -1, 1, -1, 1 */};
@@ -173,8 +174,6 @@ public static class BattleConfig
             if (node.Y == targetPos.y && node.X == targetPos.x)
                 break;
 
-            BATTLE_TILE tileType;
-
             // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약(open)한다.
             for (int i = 0; i < deltaXLenght; i++)
             {
@@ -189,7 +188,7 @@ public static class BattleConfig
                     continue;
 
                 // 이동할 수 없는 지형이면 스킵
-                if (IsPassableTile(tileDatas[nextX, nextY]) == false)
+                if (IsPassableTile(tileDatas[nextX, nextY], moveType) == false)
                     continue;
 
                 // 비용 계산
@@ -276,6 +275,19 @@ public enum BATTLE_TILE : ushort
     DECORATION
 }
 
+public enum MOVE_TYPE : ushort
+{
+    LAND,
+    FLYING
+}
+
+public enum ATTACK_TYPE : ushort
+{
+    ONE,
+    RANGE
+}
+
+
 public enum UNIT_TYPE : ushort
 {
     NONE,
@@ -295,7 +307,7 @@ public class MapData
     public GoalTileData[] GoalTileDatas;
     public RespawnTileData[] RespawnTileDatas;
     public MonsterData[] MonsterData;
-
+    public UnitData[] UnitData;
 
 }
 
@@ -326,12 +338,14 @@ public struct RespawnTileData
 [Serializable]
 public struct MonsterData
 {
-    public int ResourceIdx;
+    public uint Idx;
+    public uint MonsterId;
     public float AppearTimeSec; //게임 시작부터의 등장 초.
     public int RespawnIdx; //등장 리스폰 타일 번호
     public int GoalIdx; //목표 골 번호
     public float MoveSpeed; //한칸 당 이동 초
     public Vector3Int[] Routes; //중간 경로
+    //public Vector3Int[] AttackRange; //공격 범위. 캐릭터가 오른쪽을 보고 이동한다는 기준.
 }
 
 public struct UnitData

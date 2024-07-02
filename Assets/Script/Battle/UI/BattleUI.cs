@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,19 @@ using UnityEngine;
 public class BattleUI : MonoBehaviour
 {
     [SerializeField] BattleUITop _Top;
+    [SerializeField] BattleUIBottom _Bottom;
 
-    [SerializeField] DragUnit _DragUnit;
+    public void LoadingResources(Action<float> progressCallback)
+    {
+        _Bottom.LoadingResources(progressCallback);
+    }
 
-    public void Setting(MapData data)
+
+    public void Initialize(MapData data)
     {
         _Top.Initialize(data);
+        _Bottom.Initialize(data);
     }
 
-
-    public void CreateDragUnit(ref UnitData data)
-    {
-        _DragUnit.SetData(ref data);
-    }
-
-    public void InvisibleDragUnit()
-    {
-        _DragUnit.gameObject.SetActive(false);
-    }
 
 }

@@ -11,8 +11,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Unit
+  - Enemy
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
     locked: 0
   - name: StoryObj
     uniqueID: 3509067147
+    locked: 0
+  - name: UI
+    uniqueID: 1469732751
     locked: 0

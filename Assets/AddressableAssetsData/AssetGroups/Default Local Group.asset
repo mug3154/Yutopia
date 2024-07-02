@@ -97,6 +97,36 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b28337711e754742a179f3324b8f9ed
+    m_Address: Unit_Disposal_Obstacle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a76eef121daf8714e8da4e50771d9e19
+    m_Address: Unit_Obstacle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df8890e15823f6745ac287c97eb00102
+    m_Address: SummonUnitCell
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1f1acb539c6c3034192950c294964499
+    m_Address: SummonUnitCellInfo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fafe9470c3753b642814b84a3ea00380
+    m_Address: EnemyRouteTrail
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f67cf469aee15a42ab4625a95ebb212
+    m_Address: Enemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 27a3213296bdbe346ab0fb452a99ab16, type: 2}
   m_SchemaSet:

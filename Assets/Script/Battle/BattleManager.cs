@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
@@ -13,6 +12,8 @@ public class BattleManager : Singleton<BattleManager>
     public BattleView View => _View;
 
     [SerializeField] BattleUI _UI;
+    [SerializeField] BattleDragUnitUI _DragUnitUI;
+    public BattleDragUnitUI DragUnitUI => _DragUnitUI;
 
 
     public SpriteAtlas BattleAtlas;
@@ -75,7 +76,7 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     Idx = 0,
                     ResourceIdx = 0,
-                    Pos = new Vector3Int(1,1)
+                    Pos = new Vector3Int(1, 1)
                 }
             },
 
@@ -83,7 +84,8 @@ public class BattleManager : Singleton<BattleManager>
             {
                 new MonsterData()
                 {
-                    ResourceIdx = 1,
+                    Idx = 1,
+                    MonsterId = 1,
                     AppearTimeSec = 3,
                     GoalIdx = 0,
                     RespawnIdx = 0,
@@ -100,11 +102,12 @@ public class BattleManager : Singleton<BattleManager>
 
                 new MonsterData()
                 {
-                    ResourceIdx = 1,
+                    Idx = 2,
+                    MonsterId = 2,
                     AppearTimeSec = 6,
                     GoalIdx = 0,
                     RespawnIdx = 0,
-                    MoveSpeed = 3f,
+                    MoveSpeed = 1f,
                     Routes = new Vector3Int[]
                     {
                         new Vector3Int()
@@ -113,9 +116,50 @@ public class BattleManager : Singleton<BattleManager>
                             y = 5
                         },
                     }
+                },
+
+                new MonsterData()
+                {
+                    Idx = 3,
+                    MonsterId = 3,
+                    AppearTimeSec = 6,
+                    GoalIdx = 0,
+                    RespawnIdx = 0,
+                    MoveSpeed = 1f,
+                    Routes = new Vector3Int[]
+                    {
+                        new Vector3Int()
+                        {
+                            x = 6,
+                            y = 5
+                        },
+                    }
+                }
+            },
+
+            UnitData = new UnitData[]
+            {
+                new UnitData()
+                {
+                    Idx = 1,
+                    Type = UNIT_TYPE.OBSTACLES,
+                    IconName = "Unit_Icon_Obstacle",
+                    ResourceName = "Unit_Obstacle",
+                    Count = 10,
+                },
+
+                new UnitData()
+                {
+                    Idx = 2,
+                    Type = UNIT_TYPE.DISPOSABLE_OBSTACLES,
+                    IconName = "Unit_Icon_Disposable_obstacle",
+                    ResourceName = "Unit_Disposal_Obstacle",
+                    Count = 10,
+                    HP = 10
                 }
             }
         };
+
 
         CreateCurrentTileDatas();
 
@@ -134,13 +178,45 @@ public class BattleManager : Singleton<BattleManager>
             });
         }
 
-        _View.Setting(MapData);
-        _UI.Setting(MapData);
-
+        _DragUnitUI.gameObject.SetActive(false);
+        
         _PlayTimeSec = 0;
-
+        
         _LifeDisposal = RemainLifeCount.Subscribe(CheckLifeCount);
 
+        _TotalResourceStep = 2;
+        _CurrentResourceStep = 0;
+
+        _View.LoadingResources(MapData, CheckCompleteLoadResources);
+        _UI.LoadingResources(CheckCompleteLoadResources);
+    }
+
+    private float _TotalResourceStep;
+    private float _CurrentResourceStep;
+    private void CheckCompleteLoadResources(float progress)
+    {
+        if(progress == 1)
+        {
+            ++_CurrentResourceStep;
+        }
+
+        if(_CurrentResourceStep == _TotalResourceStep)
+        {
+            Initialize();
+
+            GameStart();
+        }
+    }
+
+    private void Initialize()
+    {
+        _View.Initialize(MapData);
+        _UI.Initialize(MapData);
+        _DragUnitUI.Initialize();
+    }
+
+    private void GameStart()
+    { 
         _UpdateDisposal = this.FixedUpdateAsObservable().Subscribe(PlayGameUpdate);
     }
 
@@ -241,24 +317,43 @@ public class BattleManager : Singleton<BattleManager>
 
     public void CreateDragUnit(ref UnitData data)
     {
-        _UI.CreateDragUnit(ref data);
+        _DragUnitUI.ShowDragUnit(ref data);
+        _View.ClearSelectDirection();
     }
 
-    public void CreateUnit(ref UnitData data)
+    public void HideDragUnit()
     {
-        _UI.InvisibleDragUnit();
+        _DragUnitUI.HideDragUnit();
+        _View.ClearSelectDirection();
+    }
+
+    public void CreateUnit(ref UnitData data, Vector3Int tilePos)
+    {
+        Time.timeScale = 1;
+
+        _DragUnitUI.DragUnit.gameObject.SetActive(false);
         
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        if (CurrentTileDatas[tilePos.x, tilePos.y].MyUnit != null)
+            return;
 
-        Vector3Int pos = _View.Tilemap.WorldToCell(mousePosition);
-        if (pos.x < 0) return;
-        if (pos.x > 15) return;
+        CurrentTileDatas[tilePos.x, tilePos.y].MyUnit = _View.CreateUnit(ref data, tilePos);
 
-        if (pos.y < 0) return;
-        if (pos.y > 9) return;
+        _View.RecheckEnemyRoute(tilePos);
+        _View.RecheckEnemyAttackTarget();
+    }
 
-        _View.CreateUnit(ref data, pos);
+    
+    public Vector3Int GetTilemapPos(Vector3 worldPosition)
+    {
+        Vector3Int pos = _View.Tilemap.WorldToCell(worldPosition);
+
+        if (pos.x < 0) return BattleConfig.TrashValueVector3Int;
+        if (pos.x > 15) return BattleConfig.TrashValueVector3Int;
+
+        if (pos.y < 0) return BattleConfig.TrashValueVector3Int;
+        if (pos.y > 9) return BattleConfig.TrashValueVector3Int;
+
+        return pos;
     }
 
 
@@ -332,6 +427,7 @@ public class CurrentTileData
     public int Idx;
 
     public UNIT_TYPE UnitType = UNIT_TYPE.NONE;
+    public MyUnit MyUnit;
 }
 
 public class ReadyEnemyData
